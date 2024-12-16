@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erevna - Website Search Bot</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .loading {
+            display: none;
+        }
+        .loading.active {
+            display: block;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+        .logo-glow {
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen text-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-col items-center justify-center mb-8">
+            <!-- Erevna Logo -->
+            <div class="mb-4 logo-glow">
+                <svg class="w-16 h-16 text-blue-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" fill="currentColor"/>
+                    <path d="M17.5 17.5L21 21" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h1 class="text-4xl font-bold text-center text-blue-500 mb-2">Erevna</h1>
+            <p class="text-lg text-gray-400 text-center max-w-2xl">
+                Your intelligent website search companion. Erevna can search for any keyword across specific websites, 
+                helping you find exactly what you're looking for.
+            </p>
+        </div>
+        
+        <div class="max-w-2xl mx-auto bg-gray-800 rounded-lg shadow-xl p-6 border border-gray-700">
+            <div class="bg-gray-900 rounded-lg p-4 mb-6 border border-gray-700">
+                <h2 class="text-lg font-semibold text-blue-400 mb-2">How it works:</h2>
+                <ul class="text-gray-300 space-y-2">
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                        Enter any website URL you want to search
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                        Type in your search keyword
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-blue-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                        Set the maximum number of pages to search
+                    </li>
+                </ul>
+            </div>
+
+            <form id="searchForm" class="space-y-4">
+                <div>
+                    <label for="website_url" class="block text-sm font-medium text-gray-300">Website URL</label>
+                    <input type="url" id="website_url" name="website_url" required
+                           class="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500"
+                           placeholder="https://example.com">
+                </div>
+                
+                <div>
+                    <label for="search_term" class="block text-sm font-medium text-gray-300">Search Term</label>
+                    <input type="text" id="search_term" name="search_term" required
+                           class="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500"
+                           placeholder="Enter search term">
+                </div>
+                
+                <div>
+                    <label for="max_pages" class="block text-sm font-medium text-gray-300">Max Pages to Search</label>
+                    <input type="number" id="max_pages" name="max_pages" value="100"
+                           class="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button type="submit" id="searchButton"
+                            class="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-200">
+                        <span class="flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                            Search
+                        </span>
+                    </button>
+                    <button type="button" id="stopButton" disabled
+                            class="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span class="flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                            Stop Search
+                        </span>
+                    </button>
+                </div>
+            </form>
+            
+            <div id="loading" class="loading text-center py-4">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500 mx-auto"></div>
+                <p class="mt-2 text-gray-400">Searching website...</p>
+                <p id="searchProgress" class="mt-1 text-sm text-gray-500"></p>
+            </div>
+            
+            <div id="results" class="mt-8 space-y-4"></div>
+        </div>
+    </div>
+
+    <script>
+        let controller = null;
+        const searchButton = document.getElementById('searchButton');
+        const stopButton = document.getElementById('stopButton');
+        const searchForm = document.getElementById('searchForm');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const searchProgress = document.getElementById('searchProgress');
+        
+        stopButton.addEventListener('click', () => {
+            if (controller) {
+                controller.abort();
+                controller = null;
+                stopSearch();
+            }
+        });
+
+        function stopSearch() {
+            loading.classList.remove('active');
+            stopButton.disabled = true;
+            searchButton.disabled = false;
+            results.innerHTML += '<p class="text-yellow-500 mt-4">Search stopped by user.</p>';
+        }
+        
+        searchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Reset previous search
+            if (controller) {
+                controller.abort();
+            }
+            controller = new AbortController();
+            
+            loading.classList.add('active');
+            results.innerHTML = '';
+            stopButton.disabled = false;
+            searchButton.disabled = true;
+            
+            const formData = {
+                website_url: document.getElementById('website_url').value,
+                search_term: document.getElementById('search_term').value,
+                max_pages: document.getElementById('max_pages').value
+            };
+            
+            try {
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                    signal: controller.signal
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    let resultsHTML = '';
+                    
+                    if (Object.keys(data.results).length === 0) {
+                        resultsHTML = '<div class="text-gray-400 bg-gray-800 rounded-lg p-4 border border-gray-700">No results found.</div>';
+                    } else {
+                        for (const [url, matches] of Object.entries(data.results)) {
+                            resultsHTML += `
+                                <div class="border border-gray-700 rounded-lg p-4 bg-gray-800 hover:bg-gray-750 transition-colors duration-200">
+                                    <a href="${url}" target="_blank" class="font-medium text-blue-400 hover:text-blue-300 break-all flex items-center">
+                                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                        </svg>
+                                        ${url}
+                                    </a>
+                                    ${matches.text_matches.length > 0 ? `
+                                        <div class="mt-3">
+                                            <h4 class="font-medium text-gray-300 mb-2">Text Matches:</h4>
+                                            <ul class="space-y-2">
+                                                ${matches.text_matches.slice(0, 5).map(match => 
+                                                    `<li class="text-gray-400 bg-gray-900 rounded p-2">${match}</li>`
+                                                ).join('')}
+                                            </ul>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    results.innerHTML = resultsHTML;
+                } else {
+                    results.innerHTML = `<div class="text-red-400 bg-red-900 bg-opacity-20 rounded-lg p-4 border border-red-700">Error: ${data.error}</div>`;
+                }
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    return;
+                }
+                results.innerHTML = `<div class="text-red-400 bg-red-900 bg-opacity-20 rounded-lg p-4 border border-red-700">Error: ${error.message}</div>`;
+            } finally {
+                if (controller) {  // Only reset if not already aborted
+                    controller = null;
+                    loading.classList.remove('active');
+                    stopButton.disabled = true;
+                    searchButton.disabled = false;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
